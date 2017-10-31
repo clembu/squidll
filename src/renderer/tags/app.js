@@ -2,12 +2,11 @@
 import * as riot from 'riot';
 
 riot.tag('app',
-`<nav class="c-nav c-nav--inline">
-    <a href="#" class="c-nav__item c-text--loud">{opts.text}</a>
-    <a href="#" class="c-nav__item c-nav__item--right"><i class="fa fa-user"></i> Account</a>
-    <a href="#" class="c-nav__item c-nav__item--right"><i class="fa fa-life-ring"></i> Help/Support</a>
-    <a href="#" class="c-nav__item c-nav__item--right"><i class="fa fa-sliders"></i> Settings</a>
-</nav>
+`<virtual
+    data-is="appbar"
+    title="{opts.text}"
+    links="{applinks}">
+</virtual>
 <div class="o-grid o-panel o-panel--nav-top">
     <div class="o-grid__cell--width-15 o-grid__cell--hidden o-grid__cell--visible@large o-panel-container">
         <nav class="c-nav c-nav--light o-panel">
@@ -68,4 +67,11 @@ riot.tag('app',
 function (opts) {
     this.text = opts.text;
     this.subtext = opts.subtext;
+    function click (e) {console.log(e)}
+    this.applinks = [
+        {label:"TEST",icon:"question",onclick:click},
+        {label:"Account",icon:"user",secondary:true,onclick:click},
+        {label:"Help/Support",icon:"life-ring",secondary:true,onclick:click},
+        {label:"Settings",icon:"sliders",secondary:true,onclick:click}
+    ]
 });
