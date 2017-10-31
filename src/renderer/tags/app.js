@@ -3,6 +3,7 @@ import * as riot from 'riot';
 
 riot.tag('app',
 `<virtual
+    ref="appbar"
     data-is="appbar"
     title="{opts.text}"
     links="{applinks}">
@@ -69,9 +70,15 @@ function (opts) {
     this.subtext = opts.subtext;
     function click (e) {console.log(e)}
     this.applinks = [
-        {label:"TEST",icon:"question",onclick:click},
-        {label:"Account",icon:"user",secondary:true,onclick:click},
-        {label:"Help/Support",icon:"life-ring",secondary:true,onclick:click},
-        {label:"Settings",icon:"sliders",secondary:true,onclick:click}
+        {label:"TEST",icon:"question",event:'test'},
+        {label:"Account",icon:"user",secondary:true,event:'user'},
+        {label:"Help/Support",icon:"life-ring",secondary:true,event:'help'},
+        {label:"Settings",icon:"sliders",secondary:true,event:'settings'}
     ]
+    this.on('mount',() => {
+        this.refs.appbar.on('test', (e) => {console.log("TESTED")})
+        this.refs.appbar.on('user', (e) => {console.log("USER")})
+        this.refs.appbar.on('settings', (e) => {console.log("SETTINGS")})
+        this.refs.appbar.on('help', (e) => {console.log("HALPS")})
+    })
 });
