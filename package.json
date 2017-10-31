@@ -1,0 +1,32 @@
+{
+    "name": "squidll",
+    "description": "A visual non-linear interactive story designer",
+    "author": "facelesspanda",
+    "repository": "facelesspanda/squidll",
+    "bugs": "https://github.com/facelesspanda/squidll/issues",
+    "homepage": "https://github.com/facelesspanda/squidll",
+    "version": "0.0.0",
+    "license": "MIT",
+    "scripts": {
+        "dev": "electron-webpack dev",
+        "compile": "electron-webpack",
+        "dist": "yarn compile && electron-builder",
+        "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
+    },
+    "dependencies": {
+        "riot": "^3.7.3",
+        "source-map-support": "^0.5.0"
+    },
+    "devDependencies": {
+        "electron": "1.7.9",
+        "electron-builder": "^19.42.1",
+        "electron-webpack": "1.10.1",
+        "webpack": "^3.8.1"
+    },
+    "build": {
+        "appId": "com.facelesspanda.squidll",
+        "mac": {
+            "category": "public.app-category.developer-tools"
+        }
+    }
+}

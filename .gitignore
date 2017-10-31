@@ -39,3 +39,5 @@ jspm_packages
 # Editor settings
 .vscode
 
+# Build output
+dist
