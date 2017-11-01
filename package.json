@@ -1,5 +1,6 @@
 {
     "name": "squidll",
+    "productName": "Squidll",
     "description": "A visual non-linear interactive story designer",
     "author": "facelesspanda",
     "repository": "facelesspanda/squidll",
@@ -32,6 +33,6 @@
         }
     },
     "electronWebpack": {
-        "title": "Squidll"
+        "title": true
     }
 }
