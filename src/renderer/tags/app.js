@@ -2,20 +2,15 @@
 import * as riot from 'riot';
 
 riot.tag('app',
-`<virtual
+`<appbar
     ref="appbar"
-    data-is="appbar"
     title="{opts.text}"
     links="{applinks}">
-</virtual>
+</appbar>
 <div class="o-grid o-panel o-panel--nav-top">
-    <div class="o-grid__cell--width-15 o-grid__cell--hidden o-grid__cell--visible@large o-panel-container">
-        <nav class="c-nav c-nav--light o-panel">
-            <div class="c-nav__item">Reports</div>
-            <div class="c-nav__item">Analytics</div>
-            <div class="c-nav__item">Data Gathering</div>
-        </nav>
-    </div>
+    <sidebar ref="sidebar" class="o-grid__cell--width-15 o-grid__cell--hidden o-grid__cell--visible@large o-panel-container"
+        knots={knots}>
+    </sidebar>
     <main class="o-grid__cell o-grid__cell--width-85@large o-panel-container">
         <div class="o-grid o-grid--wrap o-panel">
             <div class="o-grid__cell o-grid__cell--width-100">
@@ -70,15 +65,23 @@ function (opts) {
     this.subtext = opts.subtext;
     function click (e) {console.log(e)}
     this.applinks = [
-        {label:"TEST",icon:"question",event:'test'},
         {label:"Account",icon:"user",secondary:true,event:'user'},
         {label:"Help/Support",icon:"life-ring",secondary:true,event:'help'},
-        {label:"Settings",icon:"sliders",secondary:true,event:'settings'}
+        {label:"Settings",icon:"sliders",secondary:true,event:'settings'},
+        {label:"About",icon:"question",secondary:true,event:'about'}
+    ]
+    this.knots = [
+        {label:"1", stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
+        {label:"2"},
+        {label:"3", stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
     ]
     this.on('mount',() => {
-        this.refs.appbar.on('test', (e) => {console.log("TESTED")})
+        console.log(this.refs);
+        this.refs.appbar.on('about', (e) => {console.log("about")})
         this.refs.appbar.on('user', (e) => {console.log("USER")})
         this.refs.appbar.on('settings', (e) => {console.log("SETTINGS")})
         this.refs.appbar.on('help', (e) => {console.log("HALPS")})
+        this.refs.sidebar.on('knot', (knot) => {console.log("CHANGED KNOT",knot)})
+        this.refs.sidebar.on('stitch', (stitch) => {console.log("CHANGED STITCH",stitch)})
     })
 });
