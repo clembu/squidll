@@ -61,6 +61,10 @@ riot.tag('app',
     </main>
 </div>`,
 function (opts) {
+    const self = this;
+    this.knot;
+    this.stitch;
+    this.alert = {isVisible:false}
     this.text = opts.text;
     this.subtext = opts.subtext;
     function click (e) {console.log(e)}
@@ -71,17 +75,37 @@ function (opts) {
         {label:"About",icon:"question",secondary:true,event:'about'}
     ]
     this.knots = [
-        {label:"1", expanded: true, stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
-        {label:"2", expanded: true},
-        {label:"3", expanded: false, stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
+        {label:"1", stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
+        {label:"2", stitches: []},
+        {label:"3", stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
     ]
     this.on('mount',() => {
-        console.log(this.refs);
         this.refs.appbar.on('about', (e) => {console.log("about")})
         this.refs.appbar.on('user', (e) => {console.log("USER")})
         this.refs.appbar.on('settings', (e) => {console.log("SETTINGS")})
         this.refs.appbar.on('help', (e) => {console.log("HALPS")})
-        this.refs.sidebar.on('knot', (knot) => {console.log("CHANGED KNOT",knot)})
-        this.refs.sidebar.on('stitch', (stitch) => {console.log("CHANGED STITCH",stitch)})
+        this.refs.sidebar.on('knot', (knot) => {this.knot = knot})
+        this.refs.sidebar.on('stitch', (stitch) => {this.stitch = stitch})
+        this.refs.sidebar.on('createknot', (knot) => {
+            this.knots.push({label:knot,stitches:[]});
+            this.knot = knot;
+        })
+        this.refs.sidebar.on('createstitch', (stitch) => {
+            let k = this.knots.filter(k => k.label == this.knot)[0];
+            k.stitches.push({label:stitch,path:[k.label,stitch].join('.')})
+        })
+    })
+    this.on('newknot',() => {
+        this.refs.sidebar.trigger('newknot');
+    })
+    this.on('newstitch',() => {
+        this.refs.sidebar.trigger('newstitch');
+    })
+    this.on('updated',() => {
+        let newname = document.getElementById("newname");
+        if(newname !== null) {
+            console.log('focusing');
+            newname.trigger('focus');
+        }
     })
 });

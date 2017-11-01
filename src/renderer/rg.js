@@ -1761,8 +1761,7 @@ riot.tag("rg-markdown", "", "", "", function(opts) {
 */
 
 riot.tag("rg-modal",
-    '<div class="c-overlay {c-overlay--dismissable: opts.modal.dismissable}"  if="{opts.modal.isvisible}" onclick="{close}">' +
-    '<div class="c-overlay">' +
+    '<div class="c-overlay {c-overlay--dismissable: opts.modal.dismissable}"  if="{opts.modal.isvisible}" onclick="{close}"></div>' +
     '<div class="o-modal {o-modal--ghost: opts.modal.ghost} {o-modal--full: opts.modal.full}" if="{opts.modal.isvisible}">' +
     '<div class="c-card">' +
     '<header class="c-card__header">' +
@@ -1772,7 +1771,7 @@ riot.tag("rg-modal",
     '<div class="c-card__body o-panel">' +
     '<yield></yield>' +
     '</div>' +
-    '<footer class="c-card__footer" {\'c-card__footer--block\': !opts.modal.ghost}">' +
+    '<footer class="c-card__footer {c-card__footer--block: !opts.modal.ghost}">' +
     '<div class="c-input-group">' +
     '<button each="{opts.modal.buttons}" type="button" class="c-button {c-button--block: blockbuttons} {\'c-button--\' + style}" onclick="{action}" riot-style="{style}"> {text} </button>' +
     '</div>' +
