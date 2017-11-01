@@ -1,5 +1,6 @@
 'use strict';
 import * as riot from 'riot';
+import {APP,STORY} from "common/events";
 
 riot.tag('app',
 `<appbar
@@ -69,10 +70,9 @@ function (opts) {
     this.subtext = opts.subtext;
     function click (e) {console.log(e)}
     this.applinks = [
-        {label:"Account",icon:"user",secondary:true,event:'user'},
-        {label:"Help/Support",icon:"life-ring",secondary:true,event:'help'},
-        {label:"Settings",icon:"sliders",secondary:true,event:'settings'},
-        {label:"About",icon:"question",secondary:true,event:'about'}
+        {label:"Help/Support",icon:"life-ring",secondary:true,event:APP.NAV.HELP.OPEN},
+        {label:"Settings",icon:"sliders",secondary:true,event:APP.NAV.SETTINGS.OPEN},
+        {label:"About",icon:"question",secondary:true,event:APP.NAV.ABOUT.OPEN}
     ]
     this.knots = [
         {label:"1", stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
@@ -80,32 +80,24 @@ function (opts) {
         {label:"3", stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
     ]
     this.on('mount',() => {
-        this.refs.appbar.on('about', (e) => {console.log("about")})
-        this.refs.appbar.on('user', (e) => {console.log("USER")})
-        this.refs.appbar.on('settings', (e) => {console.log("SETTINGS")})
-        this.refs.appbar.on('help', (e) => {console.log("HALPS")})
-        this.refs.sidebar.on('knot', (knot) => {this.knot = knot})
-        this.refs.sidebar.on('stitch', (stitch) => {this.stitch = stitch})
-        this.refs.sidebar.on('createknot', (knot) => {
+        this.refs.appbar.on(APP.NAV.ABOUT.OPEN, (e) => {console.log("about")})
+        this.refs.appbar.on(APP.NAV.SETTINGS.OPEN, (e) => {console.log("SETTINGS")})
+        this.refs.appbar.on(APP.NAV.HELP.OPEN, (e) => {console.log("HALPS")})
+        this.refs.sidebar.on(STORY.NAV.KNOT.GOTO, (knot) => {this.knot = knot})
+        this.refs.sidebar.on(STORY.NAV.STITCH.GOTO, (stitch) => {this.stitch = stitch})
+        this.refs.sidebar.on(STORY.EDIT.KNOT.UPDATE, (knot) => {
             this.knots.push({label:knot,stitches:[]});
             this.knot = knot;
         })
-        this.refs.sidebar.on('createstitch', (stitch) => {
+        this.refs.sidebar.on(STORY.EDIT.STITCH.UPDATE, (stitch) => {
             let k = this.knots.filter(k => k.label == this.knot)[0];
             k.stitches.push({label:stitch,path:[k.label,stitch].join('.')})
         })
     })
-    this.on('newknot',() => {
-        this.refs.sidebar.trigger('newknot');
+    this.on(STORY.EDIT.KNOT.CREATE,() => {
+        this.refs.sidebar.trigger(STORY.EDIT.KNOT.CREATE);
     })
-    this.on('newstitch',() => {
-        this.refs.sidebar.trigger('newstitch');
-    })
-    this.on('updated',() => {
-        let newname = document.getElementById("newname");
-        if(newname !== null) {
-            console.log('focusing');
-            newname.trigger('focus');
-        }
+    this.on(STORY.EDIT.STITCH.CREATE,() => {
+        this.refs.sidebar.trigger(STORY.EDIT.STITCH.CREATE);
     })
 });

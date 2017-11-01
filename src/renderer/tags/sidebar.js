@@ -1,5 +1,6 @@
 'use strict';
 import * as riot from 'riot';
+import { STORY_EDIT,STORY_NAV } from "common/events";
 
 riot.tag('sidebar',
 `<nav class="c-nav c-nav--light o-panel">
@@ -35,25 +36,24 @@ riot.tag('sidebar',
     </div>
 </nav>
 `,'','', function(opts) {
-    console.log(opts)
     this.promptknot = false;
     this.promptstitch = false;
     this.selected = undefined;
     this.onselectknot = (e) => {
         this.selected = e.item.label;
-        this.trigger('knot',e.item.label);
+        this.trigger(STORY_NAV.KNOT.GOTO,e.item.label);
     }
     this.onselectstitch = (e) => {
         let k = e.item.path.substring(0,e.item.path.indexOf('.'));
         this.selected = k;
-        this.trigger('knot',k)
-        this.trigger('stitch',e.item.label);
+        this.trigger(STORY_NAV.KNOT.GOTO,k)
+        this.trigger(STORY_NAV.STITCH.GOTO,e.item.label);
     }
     this.ontoggle = (e) => {
         e.item.expanded = !e.item.expanded
         e.stopPropagation()
     }
-    this.on('newknot', () => {
+    this.on(STORY_EDIT.KNOT.CREATE, () => {
         this.promptknot = true; this.update()
     })
     this.cancelknot = (e) => {
@@ -61,9 +61,10 @@ riot.tag('sidebar',
     }
     this.confirmknot = (e) => {
         this.promptknot = false;
-        this.trigger('createknot',this.refs.knotname.value);
+        this.selected = this.refs.knotname.value;
+        this.trigger(STORY_EDIT.KNOT.UPDATE,this.refs.knotname.value);
     }
-    this.on('newstitch', () => {
+    this.on(STORY_EDIT.STITCH.CREATE, () => {
         this.promptstitch = true; this.update()
     })
     this.cancelstitch = (e) => {
@@ -71,7 +72,7 @@ riot.tag('sidebar',
     }
     this.confirmstitch = (e) => {
         this.promptstitch = false;
-        this.trigger('createstitch',this.refs["stitchname_"+this.selected].value);
+        this.trigger(STORY_EDIT.STITCH.UPDATE,this.refs["stitchname_"+this.selected].value);
     }
     this.on('updated', () => {
         if (this.promptknot) this.refs.knotname.focus();
