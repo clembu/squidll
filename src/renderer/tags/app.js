@@ -71,9 +71,9 @@ function (opts) {
         {label:"About",icon:"question",secondary:true,event:'about'}
     ]
     this.knots = [
-        {label:"1", stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
-        {label:"2"},
-        {label:"3", stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
+        {label:"1", expanded: true, stitches: [{path:"1.1",label:"1"},{path:"1.2",label:"2"},{path:"1.3",label:"3"}]},
+        {label:"2", expanded: true},
+        {label:"3", expanded: false, stitches: [{path:"3.1",label:"1"},{path:"3.2",label:"2"}]}
     ]
     this.on('mount',() => {
         console.log(this.refs);
