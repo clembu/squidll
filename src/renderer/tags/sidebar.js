@@ -26,6 +26,7 @@ function(opts) {
     this.confirm = () => {
         console.log("CONFIRMING")
         opts.confirm(self.refs.i.value);
+        self.refs.i.value = ""
     }
     this.onkeyup = (e) => {
         if(e.which == keycode('enter')) {
