@@ -8,6 +8,7 @@ const story_ = "story";
 const EDIT = ":edit";
 const NAV = ":nav";
 const IO = ":io";
+const OP = ":op";
 
 // LVL 3 namespaces
 const SETTINGS = "+settings";
@@ -17,6 +18,10 @@ const FILES = "+files";
 const KNOT = "+knot";
 const STITCH = "+stitch";
 const NODE = "+node";
+
+const FOCUS = "+focus";
+const CANCEL = "+cancel";
+const CONFIRM = "+ok";
 
 // LVL 4 namespaces
 const SAVE = ".save";
@@ -98,6 +103,11 @@ const events = {
                 CLOSE : app_+NAV+SETTINGS+OPEN
             }
         },
+        OP : {
+            FOCUS : app_+OP+FOCUS,
+            CANCEL : app_+OP+CANCEL,
+            CONFIRM : app_+OP+CONFIRM
+        },
         EDIT : {
             SETTINGS : {
                 UPDATE : app_+EDIT+SETTINGS+UPDATE,
@@ -111,6 +121,7 @@ export {events as default};
 
 export const APP = events.APP;
 export const APP_NAV = events.APP.NAV;
+export const APP_NAV_CANCEL = events.APP.NAV.CANCEL;
 export const APP_NAV_ABOUT = events.APP.NAV.ABOUT;
 export const APP_NAV_HELP = events.APP.NAV.HELP;
 export const APP_NAV_SETTINGS = events.APP.NAV.SETTINGS;
@@ -118,6 +129,7 @@ export const APP_EDIT = events.APP.EDIT;
 export const APP_EDIT_SETTINGS = events.APP.EDIT.SETTINGS;
 export const APP_IO = events.APP.IO;
 export const APP_IO_FILES = events.APP.IO.FILES;
+export const APP_OP = events.APP.OP;
 export const STORY = events.STORY;
 export const STORY_NAV = events.STORY.NAV;
 export const STORY_NAV_KNOT = events.STORY.NAV.KNOT;

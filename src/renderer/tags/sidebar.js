@@ -1,6 +1,43 @@
 'use strict';
 import * as riot from 'riot';
-import { STORY_EDIT,STORY_NAV } from "common/events";
+import { STORY_EDIT,STORY_NAV,APP_OP } from "common/events";
+import keycode from 'keycode';
+
+riot.tag('name-input',
+`<div class="c-input-group c-input-group--rounded-right">
+    <div class="o-field">
+        <input ref="i"
+            class="c-field"
+            type="text"
+            placeholder="{opts.placeholder}"
+            onkeyup="{onkeyup}"
+            ></input>
+    </div>
+    <button class="c-button c-button--error" onclick="{cancel}"><icon icon="close"></icon></button>
+    <button class="c-button c-button--success" onclick="{confirm}"><icon icon="check"></icon></button>
+</div>`,
+'',
+'onfocus="{onfocus}"',
+function(opts) {
+    const self = this
+    this.cancel = () => {
+        opts.cancel();
+    }
+    this.confirm = () => {
+        console.log("CONFIRMING")
+        opts.confirm(self.refs.i.value);
+    }
+    this.onkeyup = (e) => {
+        if(e.which == keycode('enter')) {
+            self.confirm()
+        } else if (e.which == keycode('esc')) {
+            self.cancel()
+        }
+    }
+    this.on(APP_OP.FOCUS, () => {
+        self.refs.i.focus();
+    })
+})
 
 riot.tag('sidebar',
 `<nav class="c-nav c-nav--light o-panel">
@@ -16,23 +53,21 @@ riot.tag('sidebar',
             </div>
         </virtual>
         <div class="c-nav__item" show="{parent.promptstitch && label == parent.selected}" style="padding-left: 50px">
-            <div class="c-input-group c-input-group--rounded">
-                <div class="o-field">
-                    <input ref="stitchname_{label}" class="c-field" type="text" placeholder="new stitch"></input>
-                </div>
-                <button class="c-button c-button--error" onclick="{parent.cancelstitch}"><icon icon="close"></icon></button>
-                <button class="c-button c-button--success" onclick="{parent.confirmstitch}"><icon icon="check"></icon></button>
-            </div>
+            <name-input
+                ref="stitch_{label}"
+                cancel="{parent.cancelstitch}"
+                confirm="{parent.confirmstitch}"
+                placeholder="new stitch">
+            </name-input>
         </div>
     </virtual>
     <div class="c-nav__item" show={promptknot}>
-        <div class="c-input-group c-input-group--rounded">
-            <div class="o-field">
-                <input ref="knotname" class="c-field" type="text" placeholder="new knot"></input>
-            </div>
-            <button class="c-button c-button--error" onclick="{cancelknot}"><icon icon="close"></icon></button>
-            <button class="c-button c-button--success" onclick="{confirmknot}"><icon icon="check"></icon></button>
-        </div>
+        <name-input
+            ref="knotname"
+            cancel="{cancelknot}"
+            confirm="{confirmknot}"
+            placeholder="new knot">
+        </name-input>
     </div>
 </nav>
 `,'','', function(opts) {
@@ -57,25 +92,27 @@ riot.tag('sidebar',
         this.promptknot = true; this.update()
     })
     this.cancelknot = (e) => {
-        this.promptknot = false;
+        this.promptknot = false; this.update()
     }
-    this.confirmknot = (e) => {
+    this.confirmknot = (k) => {
         this.promptknot = false;
-        this.selected = this.refs.knotname.value;
-        this.trigger(STORY_EDIT.KNOT.UPDATE,this.refs.knotname.value);
+        this.selected = k
+        this.trigger(STORY_EDIT.KNOT.UPDATE,k);
+        this.update()
     }
     this.on(STORY_EDIT.STITCH.CREATE, () => {
         this.promptstitch = true; this.update()
     })
     this.cancelstitch = (e) => {
-        this.promptstitch = false;
+        this.promptstitch = false; this.update()
     }
-    this.confirmstitch = (e) => {
+    this.confirmstitch = (s) => {
         this.promptstitch = false;
-        this.trigger(STORY_EDIT.STITCH.UPDATE,this.refs["stitchname_"+this.selected].value);
+        this.trigger(STORY_EDIT.STITCH.UPDATE,s);
+        this.update()
     }
     this.on('updated', () => {
-        if (this.promptknot) this.refs.knotname.focus();
-        else if (this.promptstitch) this.refs["stitchname_"+this.selected].focus();
+        if (this.promptknot) {this.refs.knotname.trigger(APP_OP.FOCUS);}
+        else if (this.promptstitch) this.refs["stitch_"+this.selected].trigger(APP_OP.FOCUS);
     })
 })
